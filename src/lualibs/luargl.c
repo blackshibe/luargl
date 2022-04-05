@@ -199,8 +199,8 @@ int luargl_set_camera_position(lua_State *state) {
     float x = lua_tonumber(state, -2);
     float y = lua_tonumber(state, -1);
 
-    _rgl_data->camera->position.x = x;
-    _rgl_data->camera->position.y = y;
+    _rgl_camera->position.x = x;
+    _rgl_camera->position.y = y;
 
     return 0;
 }
@@ -208,9 +208,9 @@ int luargl_set_camera_position(lua_State *state) {
 int luargl_get_camera_position(lua_State *state) {
     lua_newtable(state);
 
-    lua_pushnumber(state, _rgl_data->camera->position.x);
+    lua_pushnumber(state, _rgl_camera->position.x);
     lua_rawseti(state, 1, 1);
-    lua_pushnumber(state, _rgl_data->camera->position.y);
+    lua_pushnumber(state, _rgl_camera->position.y);
     lua_rawseti(state, 1, 2);
 
     return 1;
