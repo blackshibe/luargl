@@ -6,5 +6,5 @@ then
 	git pull
 	cd ..
 else
-	git clone https://github.com/rxtthin/rgl
+	git clone -b release https://github.com/rxtthin/rgl
 fi
