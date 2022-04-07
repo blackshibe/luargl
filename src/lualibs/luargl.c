@@ -11,10 +11,7 @@ lua_State* state = NULL;
 int library_reference = -1;
 bool started = false;
 
-// defined across 2 files lmao kill me!!!!!
-#define RED "\033[0;31m"
-#define BLUE "\033[0;34m"
-#define NC "\033[0m"
+#include "colors.h"
 
 typedef int(access_function)(lua_State* L, int idx);
 
@@ -54,6 +51,8 @@ int luax_access_field(int tbl_stack_pos, char* strindex, access_function func) {
 	if (func(state, stack_pos)) {
 		return stack_pos;
 	}
+
+	return -1;
 }
 
 // rgl defs
@@ -241,10 +240,8 @@ LUALIB_API int luaopen_luargl(lua_State* L) {
 	printf("%i\n", lua_gettop(L));
 	lua_settop(L, 0);
 	lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
-	printf("shit\n");
 	printf("%i\n", lua_gettop(L));
 	luaL_setfuncs(L, data_lib, 0);
-	printf("shit\n");
 
 	// luargl.data = {}
 	lua_rawgeti(L, LUA_REGISTRYINDEX, library_reference);

@@ -7,12 +7,10 @@
 #include "chrono"
 #include "unistd.h"
 
+#include "colors.h"
+
 using namespace std;
 using namespace std::chrono;
-
-#define RED "\033[0;31m"
-#define BLUE "\033[0;34m"
-#define NC "\033[0m"
 
 // https://csl.name/post/lua-and-cpp/
 
