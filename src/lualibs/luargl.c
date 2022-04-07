@@ -30,7 +30,7 @@ int64_t now() {
 // luax defs
 
 void luax_push_error(const char* error) {
-	lua_pushstring(state, "error");
+	lua_pushstring(state, error);
 	lua_error(state);
 }
 
@@ -184,18 +184,33 @@ int luargl_is_key_pressed(lua_State* state) {
 int luargl_load_image_from_file(lua_State* state) {
 
 	char* path = lua_tostring(state, 1);
+	printf("loadingi image %s", path);
 	rglTexture* texture = lua_newuserdata(state, sizeof(rglTexture));
-	rglTextureLoadFromFile(&texture, path, RGL_TEXTURE_FILTER_NONE);
+	rglTextureLoadFromFile(texture, path, RGL_TEXTURE_FILTER_NONE);
 
 	return 1;
 }
 
 int luargl_create_sprite(lua_State* state) {
+
+	if (!_rgl_running) {
+		luax_push_error("cannot load assets when rgl hasn't started");
+		return 1;
+	}
+
 	rglTexture* texture = lua_touserdata(state, 1);
 	rglSprite* sprite = lua_newuserdata(state, sizeof(rglSprite));
-	rglSpriteCreate(&sprite, &texture);
+	rglSpriteCreate(sprite, texture);
 
 	return 1;
+}
+
+int luargl_draw_sprite(lua_State* state) {
+	rglSprite* sprite = lua_touserdata(state, 1);
+
+	rglSpriteRender(sprite);
+
+	return 0;
 }
 
 static const luaL_Reg lib[] = {
@@ -206,7 +221,7 @@ static const luaL_Reg lib[] = {
 
 	{"load_image_from_file", luargl_load_image_from_file},
 	{"create_sprite", luargl_create_sprite},
-
+	{"draw_sprite", luargl_draw_sprite},
 
 	{NULL, NULL},
 };

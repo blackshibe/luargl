@@ -9,15 +9,19 @@ luargl.window_properties = {
 	height = 1500,
 }
 
-
 local circles = {}
 local CIRCLES_COUNT = 100
-local image = luargl.load_image_from_file("scripts/rgl/test.png")
-local sprite = luargl.create_sprite(image)
-print(image, sprite)
+
+local image
+local sprite
 
 function rgl_app_init()
 	print("app init from called inside Lua")
+
+	image = luargl.load_image_from_file("scripts/rgl/test.png")
+	print("loaded image")
+
+	print(image, sprite)
 
 	math.randomseed(now())
 	for i = 1, CIRCLES_COUNT do
@@ -61,6 +65,11 @@ end
 function rgl_app_draw()
 	for _, v in pairs(circles) do
 		luargl.draw_circle(v[2], v[1], v[3])
+	end
+	if sprite then
+		luargl.draw_sprite(sprite)
+	else
+		sprite = luargl.create_sprite(image)
 	end
 end
 
