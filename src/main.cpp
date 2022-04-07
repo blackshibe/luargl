@@ -27,7 +27,6 @@ int64_t now() {
 int lua_sleep(lua_State* state) {
 	float time = lua_tonumber(state, 1);
 
-	printf("sleep for %f\n", time);
 	sleep(time);
 
 	return 0;

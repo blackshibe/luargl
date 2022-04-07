@@ -1,4 +1,5 @@
--- this was removed in favor of RGL's draw loop
+-- this was removed in favor of RGL's draw loop & scheduler
+
 local function fnow()
 	return math.floor(now() / 1000)
 end

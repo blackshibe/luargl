@@ -1,9 +1,12 @@
 #include <pthread.h>
 #include <rgl/rgl.h>
 #include <sys/time.h>
+#include <lua.h>
 
+#include "lua5.3/lualib.h"
 #include "lua5.3/lauxlib.h"
 #include "lua5.3/lua.h"
+
 #include "math.h"
 #include "stdio.h"
 
@@ -23,13 +26,6 @@ int64_t now() {
 	gettimeofday(&time, NULL);
 	return time.tv_sec;
 }
-
-struct timeoutInfo {
-	int func;
-	long time;
-	bool disposable;
-	bool active;
-};
 
 // luax defs
 
@@ -54,12 +50,13 @@ int luax_access_field(int tbl_stack_pos, char* strindex, access_function func) {
 	if (func(state, stack_pos)) {
 		return stack_pos;
 	}
+
+	return -1;
 }
 
 // rgl defs
 
 void rgl_app_init(void) {
-	printf("C rgl_app_init\n");
 	luax_call_global_if_exists("rgl_app_init", 0);
 }
 
@@ -104,19 +101,19 @@ int luargl_make_window(lua_State* state) {
 
 	if (lua_istable(state, -1)) {
 		int width_pos = luax_access_field(-1, "width", lua_isinteger);
-		if (width_pos != NULL) {
+		if (width_pos != -1) {
 			width = lua_tointeger(state, width_pos);
 			lua_pop(state, 1);
 		}
 
 		int height_pos = luax_access_field(-1, "height", lua_isinteger);
-		if (height_pos != NULL) {
+		if (height_pos != -1) {
 			height = lua_tointeger(state, height_pos);
 			lua_pop(state, 1);
 		}
 
 		int name_pos = luax_access_field(-1, "title", lua_isstring);
-		if (name_pos != NULL) {
+		if (name_pos != -1) {
 			name = lua_tostring(state, name_pos);
 			lua_pop(state, 1);
 		}
@@ -128,7 +125,7 @@ int luargl_make_window(lua_State* state) {
 		.title = name,
 		.width = width,
 		.height = height,
-		.background_color = RGL_RGB(0, 0, 0),
+		.background_color = RGL_RGB(40, 40, 40),
 		.init_f = rgl_app_init,
 		.update_f = rgl_app_update,
 		.draw_f = rgl_app_draw,
@@ -173,6 +170,7 @@ int luargl_draw_circle(lua_State* state) {
 int luargl_is_key_just_pressed(lua_State* state) {
 	int key = (rglKey)lua_tointeger(state, -1);
 	lua_pushboolean(state, rglIsKeyJustPressed(key));
+
 	return 1;
 }
 
@@ -183,11 +181,23 @@ int luargl_is_key_pressed(lua_State* state) {
 	return 1;
 }
 
+int luargl_load_image_from_file(lua_State* state) {
+
+	char* path = lua_tostring(state, 1);
+	rglTexture _texture = { 0 };
+	rglTextureLoadFromFile(&_texture, path, RGL_TEXTURE_FILTER_NONE);
+	rglTexture* texture = (rglTexture*)lua_newuserdata(state, sizeof(_texture));
+
+	return 1;
+}
+
 static const luaL_Reg lib[] = {
 	{"make_window", luargl_make_window},
 	{"draw_circle", luargl_draw_circle},
 	{"is_key_just_pressed", luargl_is_key_just_pressed},
 	{"is_key_pressed", luargl_is_key_pressed},
+
+	{"load_image_from_file", luargl_load_image_from_file},
 
 	{NULL, NULL},
 };
@@ -238,13 +248,10 @@ LUALIB_API int luaopen_luargl(lua_State* L) {
 	lua_newtable(L);
 	int ref = luaL_ref(L, LUA_REGISTRYINDEX);
 
-	printf("%i\n", lua_gettop(L));
 	lua_settop(L, 0);
 	lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
-	printf("shit\n");
-	printf("%i\n", lua_gettop(L));
+
 	luaL_setfuncs(L, data_lib, 0);
-	printf("shit\n");
 
 	// luargl.data = {}
 	lua_rawgeti(L, LUA_REGISTRYINDEX, library_reference);
