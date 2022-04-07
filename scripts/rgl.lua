@@ -5,8 +5,8 @@ local scheduler = require("scripts.rgl.scheduler")
 -- i literally don't know how to create objects lmao
 luargl.window_properties = {
 	title = "lua + rgl <<333",
-	width = 1500,
-	height = 1500,
+	width = 600,
+	height = 600,
 }
 
 local circles = {}
@@ -19,9 +19,7 @@ function rgl_app_init()
 	print("app init from called inside Lua")
 
 	image = luargl.load_image_from_file("scripts/rgl/test.png")
-	print("loaded image")
-
-	print(image, sprite)
+	sprite = luargl.create_sprite(image)
 
 	math.randomseed(now())
 	for i = 1, CIRCLES_COUNT do
@@ -66,15 +64,17 @@ function rgl_app_draw()
 	for _, v in pairs(circles) do
 		luargl.draw_circle(v[2], v[1], v[3])
 	end
-	if sprite then
-		luargl.draw_sprite(sprite)
-	else
-		sprite = luargl.create_sprite(image)
-	end
+	luargl.draw_sprite(sprite)
+end
+
+function rgl_app_quit()
+	print("leaving")
+	luargl.destroy_sprite(sprite)
+	luargl.destroy_image(image)
 end
 
 function loop()
-	print("memory usage:", collectgarbage("count"))
+	warn(string.format("memory usage: %.2f mb", collectgarbage("count")))
 	circles = {}
 	for _ = 1, CIRCLES_COUNT do
 		table.insert(circles, {

@@ -6,9 +6,8 @@
 #include "lua5.3/lualib.h"
 #include "lua5.3/lauxlib.h"
 #include "lua5.3/lua.h"
-
 #include "math.h"
-#include "stdio.h"
+#include "../colors.h"
 
 lua_State* state = NULL;
 int library_reference = -1;
@@ -40,7 +39,7 @@ void luax_call_global_if_exists(const char* global, int args) {
 		int run_result = lua_pcall(state, args, 0, 0);
 		if (run_result != LUA_OK) {
 			// todo: stack traceback
-			printf("%sRuntime error: \"%s\"\n%s", RED, lua_tostring(state, -1), NC);
+			printf("%s[Lua] Runtime error: \"%s\"\n%s", ANSI_BOLD_RED, lua_tostring(state, -1), ANSI_NC);
 		}
 	}
 }
@@ -70,7 +69,7 @@ void rgl_app_update(f32 dt) {
 		int run_result = lua_pcall(state, 1, 0, 0);
 		if (run_result != LUA_OK) {
 			// todo: stack traceback
-			printf("%sRuntime error: \"%s\"\n%s", RED, lua_tostring(state, -1), NC);
+			printf("%s[Lua] Runtime error: \"%s\"\n%s", ANSI_BOLD_RED, lua_tostring(state, -1), ANSI_NC);
 		}
 	}
 }
@@ -79,7 +78,9 @@ void rgl_app_draw(void) {
 	luax_call_global_if_exists("rgl_app_draw", 0);
 }
 
-void rgl_app_quit(void) {}
+void rgl_app_quit(void) {
+	luax_call_global_if_exists("rgl_app_quit", 0);
+}
 
 // lua lib defs
 
@@ -184,7 +185,7 @@ int luargl_is_key_pressed(lua_State* state) {
 int luargl_load_image_from_file(lua_State* state) {
 
 	char* path = lua_tostring(state, 1);
-	printf("loadingi image %s", path);
+	printf("loading image: %s\n", path);
 	rglTexture* texture = lua_newuserdata(state, sizeof(rglTexture));
 	rglTextureLoadFromFile(texture, path, RGL_TEXTURE_FILTER_NONE);
 
@@ -213,6 +214,14 @@ int luargl_draw_sprite(lua_State* state) {
 	return 0;
 }
 
+int luargl_destroy_sprite(lua_State* state) {
+	rglSpriteDestroy(lua_touserdata(state, 1));
+}
+
+int luargl_destroy_image(lua_State* state) {
+	rglTextureDestroy(lua_touserdata(state, 1));
+}
+
 static const luaL_Reg lib[] = {
 	{"make_window", luargl_make_window},
 	{"draw_circle", luargl_draw_circle},
@@ -222,6 +231,10 @@ static const luaL_Reg lib[] = {
 	{"load_image_from_file", luargl_load_image_from_file},
 	{"create_sprite", luargl_create_sprite},
 	{"draw_sprite", luargl_draw_sprite},
+
+	{"destroy_sprite", luargl_destroy_sprite},
+	{"destroy_image", luargl_destroy_image},
+
 
 	{NULL, NULL},
 };

@@ -8,3 +8,7 @@ then
 else
 	git clone https://github.com/rxtthin/rgl
 fi
+
+cd rgl
+./build_rgl.sh
+cd ..

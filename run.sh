@@ -4,16 +4,11 @@ echo "compiling"
 export LD_LIBRARY_PATH=/usr/local/lib 
 make
 
-echo "building"
-
-./update_rgl.sh
-
-cd rgl
-./build_rgl.sh
-cd ..
-
-
 echo "running"
 ./app
 
-# rm -f ./app
+echo "cleanup"
+rm ./app
+rm ./test.so
+rm ./luargl.so
+

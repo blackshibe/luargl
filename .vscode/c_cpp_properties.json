@@ -4,7 +4,8 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "/usr/include/lua5.3"
+                "/usr/include/lua5.3",
+                "/usr/include/freetype2"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/clang",

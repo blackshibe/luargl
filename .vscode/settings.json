@@ -41,7 +41,8 @@
 		"chrono": "cpp",
 		"rgl.h": "c",
 		"sched.h": "c",
-		"player.h": "c"
+		"player.h": "c",
+		"glfont.h": "c"
 	},
 	"Lua.diagnostics.globals": [
 		"Cube",
