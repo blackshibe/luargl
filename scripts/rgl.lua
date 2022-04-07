@@ -18,7 +18,7 @@ local sprite
 function rgl_app_init()
 	print("app init from called inside Lua")
 
-	image = luargl.load_image_from_file("scripts/rgl/test.png")
+	image = luargl.load_image_from_file("scripts/rgl/dog.jpg")
 	sprite = luargl.create_sprite(image)
 
 	math.randomseed(now())
