@@ -13,7 +13,8 @@ luargl.window_properties = {
 local circles = {}
 local CIRCLES_COUNT = 100
 local image = luargl.load_image_from_file("scripts/rgl/test.png")
-print(image)
+local sprite = luargl.create_sprite(image)
+print(image, sprite)
 
 function rgl_app_init()
 	print("app init from called inside Lua")

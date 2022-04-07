@@ -184,9 +184,16 @@ int luargl_is_key_pressed(lua_State* state) {
 int luargl_load_image_from_file(lua_State* state) {
 
 	char* path = lua_tostring(state, 1);
-	rglTexture _texture = { 0 };
-	rglTextureLoadFromFile(&_texture, path, RGL_TEXTURE_FILTER_NONE);
-	rglTexture* texture = (rglTexture*)lua_newuserdata(state, sizeof(_texture));
+	rglTexture* texture = lua_newuserdata(state, sizeof(rglTexture));
+	rglTextureLoadFromFile(&texture, path, RGL_TEXTURE_FILTER_NONE);
+
+	return 1;
+}
+
+int luargl_create_sprite(lua_State* state) {
+	rglTexture* texture = lua_touserdata(state, 1);
+	rglSprite* sprite = lua_newuserdata(state, sizeof(rglSprite));
+	rglSpriteCreate(&sprite, &texture);
 
 	return 1;
 }
@@ -198,6 +205,8 @@ static const luaL_Reg lib[] = {
 	{"is_key_pressed", luargl_is_key_pressed},
 
 	{"load_image_from_file", luargl_load_image_from_file},
+	{"create_sprite", luargl_create_sprite},
+
 
 	{NULL, NULL},
 };
