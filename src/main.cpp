@@ -5,12 +5,13 @@
 
 #include "chrono"
 #include "unistd.h"
-#include "colors.h"
+#include "luargl/other/includes.h"
 
 using namespace std;
 using namespace std::chrono;
 
 // https://csl.name/post/lua-and-cpp/
+// https://www.lua.org/pil/28.1.html
 
 int64_t now() {
 	int64_t ms = duration_cast<milliseconds>(
@@ -30,15 +31,15 @@ int lua_sleep(lua_State* state) {
 
 // adds a prefix to Lua print
 // lbaselib.c
-int lua_base_print (lua_State *L) {
+int lua_base_print(lua_State* L) {
 	int arguments = lua_gettop(L);
 	int i;
 
 	for (i = 1; i <= arguments; i++) {  /* for each argument */
 		size_t l;
-		const char *s = luaL_tolstring(L, i, &l);  /* convert it to string */
+		const char* s = luaL_tolstring(L, i, &l);  /* convert it to string */
 		if (i > 1)  /* not the first element? */
-		lua_writestring("\t", 1);  /* add a tab before it */
+			lua_writestring("\t", 1);  /* add a tab before it */
 		lua_writestring(s, l);  /* print it */
 		lua_pop(L, 1);  /* pop result */
 	}
@@ -46,20 +47,20 @@ int lua_base_print (lua_State *L) {
 	return 0;
 }
 
-int lua_warn (lua_State *L) {
-	lua_writestring(ANSI_BOLD_YELLOW, 7);  
+int lua_warn(lua_State* L) {
+	lua_writestring(ANSI_BOLD_YELLOW, 7);
 	lua_writestring("[Lua] ", 6);
 	lua_base_print(L);
-	lua_writestring(ANSI_NC, 5);  
+	lua_writestring(ANSI_NC, 5);
 
 	return 0;
 }
 
-int lua_print (lua_State *L) {
-	lua_writestring(ANSI_BLUE, 7);  
+int lua_print(lua_State* L) {
+	lua_writestring(ANSI_BLUE, 7);
 	lua_writestring("[Lua] ", 6);
 	lua_base_print(L);
-	lua_writestring(ANSI_NC, 5);  
+	lua_writestring(ANSI_NC, 5);
 
 	return 0;
 }
@@ -78,7 +79,7 @@ void print_error(lua_State* state) {
 }
 
 void c_runscript(lua_State* state, const char* filename) {
-	cout << " ... Running " << filename << "\n";
+	cout << "[main.cpp] compiling " << filename << "\n";
 
 	int result = luaL_loadfile(state, filename);
 
@@ -93,8 +94,9 @@ void c_runscript(lua_State* state, const char* filename) {
 		}
 	}
 	else {
-		cout << result << "\n";
+		cout << ANSI_RED << "[main.cpp] ";
 		print_error(state);
+		cout << ANSI_NC << "\n";
 	}
 }
 
@@ -106,14 +108,10 @@ int main() {
 	lua_register(state, "print", lua_print);
 	lua_register(state, "warn", lua_warn);
 
-	cout << "Running with " << LUA_VERSION << "\n";
+	cout << "[main.cpp] running " << LUA_VERSION << "\n";
 
-	// c_runscript(state, "scripts/first.lua");
-	// c_runscript(state, "scripts/external.lua");
-	// c_runscript(state, "scripts/vector.lua");
-	// c_runscript(state, "scripts/sleep.lua");
 	// c_runscript(state, "scripts/output.lua");
-	c_runscript(state, "scripts/rgl.lua");
+	c_runscript(state, "playground/init.lua");
 
 
 	lua_close(state);

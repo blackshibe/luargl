@@ -3,6 +3,5 @@
 ./rgl
 
 # .so files
-luargl.so
-test.so
-app
+./*.so
+./*.o
