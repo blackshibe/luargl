@@ -1,6 +1,6 @@
 # personal folders
-./garbage
-./rgl
+garbage
+rgl
 
 # .so files
 ./*.so
