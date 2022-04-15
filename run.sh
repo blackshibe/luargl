@@ -8,7 +8,6 @@ echo "running"
 ./app
 
 echo "cleanup"
-rm ./app
-rm ./test.so
-rm ./luargl.so
-
+rm -f app
+rm -f metasprite.o
+rm -f luargl.so

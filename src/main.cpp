@@ -11,6 +11,7 @@ using namespace std;
 using namespace std::chrono;
 
 // https://csl.name/post/lua-and-cpp/
+// https://www.lua.org/pil/28.1.html
 
 int64_t now() {
 	int64_t ms = duration_cast<milliseconds>(
@@ -30,15 +31,15 @@ int lua_sleep(lua_State* state) {
 
 // adds a prefix to Lua print
 // lbaselib.c
-int lua_base_print (lua_State *L) {
+int lua_base_print(lua_State* L) {
 	int arguments = lua_gettop(L);
 	int i;
 
 	for (i = 1; i <= arguments; i++) {  /* for each argument */
 		size_t l;
-		const char *s = luaL_tolstring(L, i, &l);  /* convert it to string */
+		const char* s = luaL_tolstring(L, i, &l);  /* convert it to string */
 		if (i > 1)  /* not the first element? */
-		lua_writestring("\t", 1);  /* add a tab before it */
+			lua_writestring("\t", 1);  /* add a tab before it */
 		lua_writestring(s, l);  /* print it */
 		lua_pop(L, 1);  /* pop result */
 	}
@@ -46,20 +47,20 @@ int lua_base_print (lua_State *L) {
 	return 0;
 }
 
-int lua_warn (lua_State *L) {
-	lua_writestring(ANSI_BOLD_YELLOW, 7);  
+int lua_warn(lua_State* L) {
+	lua_writestring(ANSI_BOLD_YELLOW, 7);
 	lua_writestring("[Lua] ", 6);
 	lua_base_print(L);
-	lua_writestring(ANSI_NC, 5);  
+	lua_writestring(ANSI_NC, 5);
 
 	return 0;
 }
 
-int lua_print (lua_State *L) {
-	lua_writestring(ANSI_BLUE, 7);  
+int lua_print(lua_State* L) {
+	lua_writestring(ANSI_BLUE, 7);
 	lua_writestring("[Lua] ", 6);
 	lua_base_print(L);
-	lua_writestring(ANSI_NC, 5);  
+	lua_writestring(ANSI_NC, 5);
 
 	return 0;
 }

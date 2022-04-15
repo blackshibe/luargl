@@ -42,7 +42,13 @@
 		"rgl.h": "c",
 		"sched.h": "c",
 		"player.h": "c",
-		"glfont.h": "c"
+		"glfont.h": "c",
+		"metasprite.h": "c",
+		"rgl_camera.h": "c",
+		"ft2build.h": "c",
+		"lualib.h": "c",
+		"shader.h": "c",
+		"glm.hpp": "c"
 	},
 	"Lua.diagnostics.globals": [
 		"Cube",
@@ -54,5 +60,7 @@
 	],
 	"Lua.diagnostics.disable": [
 		"lowercase-global"
-	]
+	],
+	"superBG.opacity": 82,
+	"superBG.activeImage": -1
 }
