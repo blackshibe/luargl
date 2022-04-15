@@ -1,11 +1,5 @@
 #include "vector2.h"
 
-// int luargl_vector2_index(lua_State* state) {
-// 	printf("vector2 newindex\n");
-
-// 	return 0;
-// }
-
 int luargl_vector2_test(lua_State* state) {
 	printf("vector2 Test!\n");
 	return 0;

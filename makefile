@@ -10,7 +10,7 @@ compile:
 	gcc -Iinclude -fPIC -Wall $(SRC) 
 
 link:
-	gcc $(OBJ) -shared -o luargl.so $(LDFLAGS)
+	gcc $(OBJ) -shared -o lua/luargl.so $(LDFLAGS)
 
 main:
 	g++ $(CFLAGS) -o app src/main.cpp $(LDFLAGS)

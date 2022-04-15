@@ -48,7 +48,10 @@
 		"ft2build.h": "c",
 		"lualib.h": "c",
 		"shader.h": "c",
-		"glm.hpp": "c"
+		"glm.hpp": "c",
+		"lua.h": "c",
+		"includes.h": "c",
+		"freetype.h": "c"
 	},
 	"Lua.diagnostics.globals": [
 		"Cube",

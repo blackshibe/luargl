@@ -5,7 +5,7 @@
 
 #include "chrono"
 #include "unistd.h"
-#include "colors.h"
+#include "luargl/other/includes.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -79,7 +79,7 @@ void print_error(lua_State* state) {
 }
 
 void c_runscript(lua_State* state, const char* filename) {
-	cout << " ... Running " << filename << "\n";
+	cout << "[main.cpp] compiling " << filename << "\n";
 
 	int result = luaL_loadfile(state, filename);
 
@@ -94,8 +94,9 @@ void c_runscript(lua_State* state, const char* filename) {
 		}
 	}
 	else {
-		cout << result << "\n";
+		cout << ANSI_RED << "[main.cpp] ";
 		print_error(state);
+		cout << ANSI_NC << "\n";
 	}
 }
 
@@ -107,14 +108,10 @@ int main() {
 	lua_register(state, "print", lua_print);
 	lua_register(state, "warn", lua_warn);
 
-	cout << "Running with " << LUA_VERSION << "\n";
+	cout << "[main.cpp] running " << LUA_VERSION << "\n";
 
-	// c_runscript(state, "scripts/first.lua");
-	// c_runscript(state, "scripts/external.lua");
-	// c_runscript(state, "scripts/vector.lua");
-	// c_runscript(state, "scripts/sleep.lua");
 	// c_runscript(state, "scripts/output.lua");
-	c_runscript(state, "scripts/rgl.lua");
+	c_runscript(state, "playground/init.lua");
 
 
 	lua_close(state);

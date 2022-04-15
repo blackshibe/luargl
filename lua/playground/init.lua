@@ -1,30 +1,25 @@
+-- todo: fix this
 local luargl = require("luargl")
-local key = require("scripts.rgl.key")
-local scheduler = require("scripts.rgl.scheduler")
 
--- i literally don't know how to create objects lmao
+local key = require("rgl.key")
+local scheduler = require("rgl.scheduler")
+
 luargl.window_properties = {
-	title = "lua + rgl <<333",
+	title = "Luargl Playground",
 	width = 600,
 	height = 600,
 }
 
 local circles = {}
-local CIRCLES_COUNT = 10000
+local CIRCLES_COUNT = 5000
+local last_fps = 0
 
 local image
 local sprite
 
 function rgl_app_init()
-	image = luargl.load_image_from_file("scripts/rgl/test.jpg")
+	image = luargl.load_image_from_file("playground/assets/test.jpg")
 	sprite = luargl.create_sprite(image)
-
-	for i, v in pairs(getmetatable(sprite)) do
-		print("metatable:", i, v)
-	end
-	for i, v in pairs(sprite) do
-		print(i, v)
-	end
 
 	math.randomseed(now())
 	for i = 1, CIRCLES_COUNT do
@@ -74,8 +69,6 @@ function rgl_app_update(delta_time)
 	end
 
 	luargl.camera.zoom = math.max(luargl.camera.zoom, 0.1)
-
-	-- print("after:", position)
 	luargl.camera.position = position
 
 	scheduler.update()
@@ -88,14 +81,19 @@ function rgl_app_draw()
 	end
 
 	local mouse_position = luargl.get_mouse_position_in_world_space()
-	local pos = luargl.vector2(bob(0.003, 10), bob(0.001, 10))
-	sprite.position = pos
-	sprite.size = luargl.vector2(256 + bob(0.001, 100), 256 + bob(0.002, 100))
+	-- local pos = luargl.vector2(bob(0.003, 10), bob(0.001, 10))
+	-- sprite.position = pos
+	sprite.size = luargl.vector2(256 + bob(0.001, 100), 256 + bob(0.004, 100))
 
 	luargl.draw_sprite(sprite)
 	luargl.draw_circle({ 255, 0, 0 }, mouse_position, 50)
 
 	fps = fps + 1
+
+	local info = string.format("memory usage: %.2f mb, fps: %.2f", collectgarbage("count") * 0.001, last_fps)
+	luargl.render_text(info, 10, 10, 0.3 + bob(0.001, 0.2), { 255, 255, 255 })
+	luargl.render_text("middle", 10, 300, 0.5, { 0, 255, 0 })
+	luargl.render_text("left bottom", 10, 600 - 34, 0.5, { 255, 0, 0 })
 end
 
 function rgl_app_quit()
@@ -105,7 +103,7 @@ function rgl_app_quit()
 end
 
 function loop()
-	warn(string.format("memory usage: %.2f mb, fps: %.2f", collectgarbage("count") * 0.001, fps))
+	last_fps = fps
 	fps = 0
 
 	circles = {}

@@ -1,11 +1,4 @@
-#include <rgl/rgl.h>
-#include <lua.h>
-#include "lua5.3/lualib.h"
-#include "lua5.3/lauxlib.h"
-#include "lua5.3/lua.h"
-
-#include "math.h"
-#include "../colors.h"
+#include "other/includes.h"
 
 int luargl_sprite_index(lua_State* state);
 int luargl_sprite_newindex(lua_State* state);

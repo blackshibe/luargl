@@ -1,13 +1,16 @@
 # i don't know how to use makefiles
 
-echo "compiling"
+echo "[run.sh] compiling"
 export LD_LIBRARY_PATH=/usr/local/lib 
 make
 
-echo "running"
-./app
+echo "[run.sh] running"
+cd lua
+../app
+cd ../
 
-echo "cleanup"
+echo "[run.sh] cleanup"
 rm -f app
-rm -f metasprite.o
-rm -f luargl.so
+rm -f ./*.so
+rm -f ./*.o
+rm -f lua/luargl.so

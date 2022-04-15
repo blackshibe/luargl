@@ -1,5 +1,4 @@
 #include "sprite.h"
-#include "vector2.h"
 
 int luargl_sprite_index(lua_State* state) {
 	lua_getfield(state, 1, "__sprite");

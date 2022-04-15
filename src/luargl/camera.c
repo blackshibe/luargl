@@ -1,7 +1,6 @@
 #include "camera.h"
-#include "vector2.h"
 
-// takes the current camera and assigns the camera variable to the table on the stack
+// this serves more as a wrapper for _rgl_camera than a separate instance
 int init_camera(lua_State* state) {
 	lua_newtable(state);
 
@@ -12,20 +11,21 @@ int init_camera(lua_State* state) {
 	lua_setfield(state, -2, "camera");
 
 	// broken
-	// rglV2 pos = { 0, 0 };
-	// rglCameraCreate(camera, pos, 1);
-	// _rgl_camera = camera;
+	rglV2 pos = { 0, 0 };
+	rglCameraCreate(camera, pos, 1);
+	// _rgl_camera = &camera;
 
 	return 0;
 }
 
 int luargl_camera_index(lua_State* state) {
-	lua_getfield(state, 1, "__camera");
-	rglCamera* camera = (rglCamera*)lua_touserdata(state, -1);
+	// lua_getfield(state, 1, "__camera");
+	// rglCamera* camera = (rglCamera*)lua_touserdata(state, -1);
 
 	const char* index = lua_tostring(state, 2);
-	if (strcmp(index, "position") == 0)
+	if (strcmp(index, "position") == 0) {
 		luargl_create_vector2(state, _rgl_camera->position.x, _rgl_camera->position.y);
+	}
 	else if (strcmp(index, "zoom") == 0) {
 		lua_pushnumber(state, _rgl_camera->zoom);
 	}
@@ -35,8 +35,8 @@ int luargl_camera_index(lua_State* state) {
 
 // setting _rgl_camera to camera above and editing that instead is broken
 int luargl_camera_newindex(lua_State* state) {
-	lua_getfield(state, 1, "__camera");
-	rglCamera* camera = (rglCamera*)lua_touserdata(state, -1);
+	// lua_getfield(state, 1, "__camera");
+	// rglCamera* camera = (rglCamera*)lua_touserdata(state, -1);
 
 	const char* index = lua_tostring(state, 2);
 	if (strcmp(index, "position") == 0) {
