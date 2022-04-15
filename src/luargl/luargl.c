@@ -152,8 +152,6 @@ void rgl_app_init(void) {
 
 	printf("%s'%s'%s\n", ANSI_RED, load_file("scripts/rgl/text.vs"), ANSI_NC);
 	rglShaderCreate(&text_shader, load_file("scripts/rgl/text.vs"), load_file("scripts/rgl/text.fs"));
-	glUseProgram(text_shader->id);
-	glUniformMatrix4fv(glGetUniformLocation(text_shader->id, "projection"), 1, GL_FALSE, (float*)_rgl_camera->projection);
 
 	if (FT_Init_FreeType(&ft))
 	{
@@ -254,6 +252,10 @@ void rgl_app_update(f32 dt) {
 void rgl_app_draw(void) {
 	luax_call_global_if_exists("rgl_app_draw", 0);
 	RenderText(&text_shader, "hello world", -1000 + 10, 900 + 10, 1, RGL_GREEN);
+
+	glUseProgram(text_shader->id);
+	glUniformMatrix4fv(glGetUniformLocation(text_shader->id, "projection"), 1, GL_FALSE, (float*)_rgl_camera->projection);
+
 }
 
 void rgl_app_quit(void) {
