@@ -4,11 +4,11 @@ Lua bindings for the [RGL game framework](https://github.com/rxtthin/rgl). <br/>
 
 # Setup
 
-## Dependencies
+Dependencies:
 
 -	freetype
 
-## Running
+Running the example:
 
 1.	Remove the rgl folder
 2.	`./update_rgl.sh`
@@ -21,7 +21,7 @@ The main entry point is src/main.cpp
 
 `todo`<br/>
 
-# To-do:
+# Todo:
 
 -   type validation for every function
 -   animated sprites
