@@ -48,10 +48,15 @@ int luax_access_field(int tbl_stack_pos, char* strindex, access_function func) {
 	return -1;
 }
 
+// https://learnopengl.com/In-Practice/2D-Game/Postprocessing
+// GLuint buffer;
+
 // rgl defs
 void rgl_app_init(void) {
 	luax_call_global_if_exists("rgl_app_init", 0);
 	freetype_init(L);
+
+	// glGenFramebuffers(1, &buffer);
 }
 
 void rgl_app_update(f32 dt) {
@@ -68,8 +73,11 @@ void rgl_app_update(f32 dt) {
 	// doesn't work inside init
 	freetype_update_init();
 }
-
 void rgl_app_draw(void) {
+	// 	glBindFramebuffer(GL_FRAMEBUFFER, &buffer);
+	// 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	// 	glClear(GL_COLOR_BUFFER_BIT);
+
 	luax_call_global_if_exists("rgl_app_draw", 0);
 }
 
@@ -206,8 +214,6 @@ int luargl_create_sprite(lua_State* L) {
 
 	return 1;
 }
-
-
 
 int luargl_draw_sprite(lua_State* L) {
 	lua_getfield(L, -1, "__sprite");

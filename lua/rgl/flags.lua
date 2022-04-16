@@ -1,0 +1,3 @@
+return {
+	DISABLE_TEXT_FILTERING = 0,
+}
