@@ -1,6 +1,7 @@
 # Luargl
 
 Lua bindings for the [RGL game framework](https://github.com/rxtthin/rgl). <br/>
+[API available here](./API.md)
 
 # Setup
 

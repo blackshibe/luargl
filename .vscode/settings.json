@@ -59,7 +59,10 @@
 		"set_timeout",
 		"now",
 		"rglDrawCircle",
-		"wait"
+		"wait",
+		"rgl",
+		"BASE_FONT_WIDTH",
+		"BASE_FONT_HEIGHT"
 	],
 	"Lua.diagnostics.disable": [
 		"lowercase-global"

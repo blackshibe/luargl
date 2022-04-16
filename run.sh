@@ -3,14 +3,14 @@
 echo "[run.sh] compiling"
 export LD_LIBRARY_PATH=/usr/local/lib 
 make
+rm -f ./*.so
+rm -f ./*.o
 
 echo "[run.sh] running"
 cd lua
-../app
+../app $1
 cd ../
 
 echo "[run.sh] cleanup"
 rm -f app
-rm -f ./*.so
-rm -f ./*.o
 rm -f lua/luargl.so

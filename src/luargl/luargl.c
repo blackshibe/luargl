@@ -51,7 +51,7 @@ int luax_access_field(int tbl_stack_pos, char* strindex, access_function func) {
 // rgl defs
 void rgl_app_init(void) {
 	luax_call_global_if_exists("rgl_app_init", 0);
-	freetype_init();
+	freetype_init(L);
 }
 
 void rgl_app_update(f32 dt) {
@@ -67,16 +67,6 @@ void rgl_app_update(f32 dt) {
 
 	// doesn't work inside init
 	freetype_update_init();
-
-	// if (!text_initialized) {
-	// 	glUseProgram(&text_shader->id);
-
-	// 	rglMat4 viewport_mat;
-	// 	rglMat4Ortho(viewport_mat, 0, _rgl_vp_width, -_rgl_vp_height, 0, -1, 1);
-	// 	glUniformMatrix4fv(glGetUniformLocation(&text_shader->id, "projection"), 1, false, viewport_mat);
-
-	// 	text_initialized = true;
-	// }
 }
 
 void rgl_app_draw(void) {
@@ -85,9 +75,8 @@ void rgl_app_draw(void) {
 
 void rgl_app_quit(void) {
 	luax_call_global_if_exists("rgl_app_quit", 0);
+	freetype_quit();
 }
-
-// lua lib defs
 
 int luargl_make_window(lua_State* L) {
 	if (_rgl_running) {
@@ -187,6 +176,7 @@ int luargl_is_key_pressed(lua_State* L) {
 	return 1;
 }
 
+
 int luargl_load_image_from_file(lua_State* L) {
 
 	const char* path = lua_tostring(L, 1);
@@ -216,6 +206,8 @@ int luargl_create_sprite(lua_State* L) {
 
 	return 1;
 }
+
+
 
 int luargl_draw_sprite(lua_State* L) {
 	lua_getfield(L, -1, "__sprite");
@@ -268,28 +260,25 @@ int luargl_meta_newindex(lua_State* L) {
 	return 0;
 }
 
-int luargl_render_text(lua_State* L) {
+void luargl_get_flag(char* str) {
+	lua_getglobal(L, "rgl");
 
-	char* text = lua_tostring(L, 1);
-	float x = lua_tonumber(L, 2);
-	float y = lua_tonumber(L, 3);
-	float scale = lua_tonumber(L, 4);
-
-	lua_rawgeti(L, 5, 1);
-	lua_rawgeti(L, 5, 2);
-	lua_rawgeti(L, 5, 3);
-	freetype_render(&text_shader, text, x, y, scale, RGL_RGB(lua_tonumber(L, -3), lua_tonumber(L, -2), lua_tonumber(L, -1)));
-
-	return 0;
+	lua_rawgeti(L, LUA_REGISTRYINDEX, library_reference);
+	lua_getfield(L, -1, "debug");
+	lua_getfield(L, -1, str);
 }
 
 static const luaL_Reg lib[] = {
 	{"make_window", luargl_make_window},
 	{"draw_circle", luargl_draw_circle},
+	// {"draw_rect", luargl_draw_circle},
+
 	{"is_key_just_pressed", luargl_is_key_just_pressed},
 	{"is_key_pressed", luargl_is_key_pressed},
 
 	{"load_image_from_file", luargl_load_image_from_file},
+	{"load_font_from_file", luargl_load_font_from_file},
+
 	{"destroy_image", luargl_destroy_image},
 
 	{"create_sprite", luargl_create_sprite},
@@ -335,6 +324,10 @@ LUALIB_API int luaopen_luargl(lua_State* _L) {
 	lua_rawgeti(L, LUA_REGISTRYINDEX, library_reference);
 	luaL_setfuncs(L, lib, 0);
 	init_camera(L);
+
+	// rgl.debug
+	lua_newtable(L);
+	lua_setfield(L, -2, "debug");
 
 	// assigns a metatable to the luargl variable
 	lua_newtable(L);
